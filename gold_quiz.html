@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบทดสอบเกี่ยวกับคอมพิวเตอร์</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold-light: #F5D98A;
+    --gold: #D4A017;
+    --gold-dark: #9A7209;
+    --gold-deep: #6B4F00;
+    --red: #8B1A1A;
+    --red-dark: #5C0F0F;
+    --red-light: #C0392B;
+    --cream: #FDF6E3;
+    --cream-dark: #F5E6C0;
+    --text-dark: #2C1A00;
+    --text-mid: #5C3D00;
+  }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--red-dark);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(212,160,23,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(212,160,23,0.10) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Decorative border pattern */
+  body::after {
+    content: '';
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(212,160,23,0.03) 30px, rgba(212,160,23,0.03) 31px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative; z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .crown-line {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    margin-bottom: 0.75rem;
+  }
+
+  .crown-line::before, .crown-line::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    max-width: 120px;
+  }
+
+  .crown-icon {
+    font-size: 28px;
+    color: var(--gold);
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--gold-light);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    letter-spacing: 1px;
+    line-height: 1.3;
+  }
+
+  .header p {
+    margin-top: 0.5rem;
+    color: rgba(245,217,138,0.7);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .gold-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold-dark), var(--gold), var(--gold-dark), transparent);
+    margin: 1.5rem 0;
+  }
+
+  /* SECTION CARD */
+  .card {
+    background: linear-gradient(145deg, rgba(253,246,227,0.97), rgba(245,230,192,0.95));
+    border-radius: 12px;
+    border: 1px solid var(--gold);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.6);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--gold-dark), var(--gold), var(--gold-dark));
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--red);
+    margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .card-title .icon {
+    width: 32px; height: 32px;
+    background: var(--red);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(139,26,26,0.4);
+  }
+
+  /* FORM INPUTS */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-row.full { grid-template-columns: 1fr; }
+
+  .form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--gold-dark);
+    border-radius: 8px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background: rgba(255,255,255,0.7);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212,160,23,0.2);
+    background: #fff;
+  }
+
+  /* QUIZ */
+  .quiz-section-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--gold-dark);
+    text-transform: uppercase;
+    margin: 2rem 0 1rem;
+  }
+
+  .quiz-section-label span { flex: 1; height: 1px; background: var(--gold-dark); opacity: 0.3; }
+
+  .question-card {
+    background: #fff;
+    border: 1px solid rgba(212,160,23,0.35);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s;
+    position: relative;
+  }
+
+  .question-card:hover {
+    box-shadow: 0 2px 12px rgba(212,160,23,0.2);
+  }
+
+  .question-card.answered {
+    border-color: var(--gold);
+    background: rgba(253,246,227,0.5);
+  }
+
+  .question-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    background: var(--red);
+    color: var(--gold-light);
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .question-header {
+    display: flex; gap: 10px; align-items: flex-start;
+    margin-bottom: 0.85rem;
+  }
+
+  .question-topic {
+    font-size: 0.7rem;
+    color: var(--gold-dark);
+    background: rgba(212,160,23,0.12);
+    border: 1px solid rgba(212,160,23,0.3);
+    border-radius: 20px;
+    padding: 2px 10px;
+    margin-bottom: 6px;
+    display: inline-block;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .question-text {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  .options-list {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-top: 0.85rem;
+  }
+
+  .option-label {
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(212,160,23,0.2);
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    transition: all 0.15s;
+    background: rgba(255,255,255,0.5);
+  }
+
+  .option-label:hover {
+    background: rgba(212,160,23,0.08);
+    border-color: var(--gold);
+  }
+
+  .option-label input[type="radio"] {
+    accent-color: var(--red);
+    width: 16px; height: 16px; flex-shrink: 0;
+  }
+
+  .option-label.selected {
+    background: rgba(139,26,26,0.08);
+    border-color: var(--red);
+    color: var(--red-dark);
+    font-weight: 600;
+  }
+
+  /* PROGRESS */
+  .progress-bar-wrap {
+    background: rgba(0,0,0,0.1);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 1rem;
+  }
+
+  .progress-bar {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(to right, var(--gold-dark), var(--gold));
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .progress-text {
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  /* SUBMIT */
+  .submit-wrap { text-align: center; margin-top: 2rem; }
+
+  .btn-submit {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+    color: var(--gold-light);
+    border: 2px solid var(--gold);
+    border-radius: 50px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    text-transform: uppercase;
+  }
+
+  .btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    background: linear-gradient(135deg, var(--red), var(--red-light));
+  }
+
+  .btn-submit:active:not(:disabled) { transform: translateY(0); }
+
+  .btn-submit:disabled {
+    opacity: 0.5; cursor: not-allowed;
+  }
+
+  /* RESULT */
+  #result-section { display: none; }
+
+  .result-card {
+    background: linear-gradient(135deg, var(--red-dark), #3D0000);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    padding: 2.5rem;
+    text-align: center;
+    color: var(--gold-light);
+  }
+
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    color: var(--gold);
+    line-height: 1;
+    margin: 1rem 0;
+  }
+
+  .result-score span { font-size: 1.5rem; color: var(--gold-light); }
+
+  .result-name { font-size: 1.1rem; margin-bottom: 0.5rem; opacity: 0.85; }
+  .result-status { font-size: 1.2rem; font-weight: 700; margin: 0.5rem 0 1rem; }
+  .result-status.pass { color: #7CFC00; }
+  .result-status.fail { color: #FFB347; }
+
+  .loading-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(92,15,15,0.85); z-index: 100;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+  }
+  .loading-overlay.active { display: flex; }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 4px solid rgba(212,160,23,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: var(--gold-light); font-size: 1rem; }
+
+  .ornament { color: var(--gold); font-size: 1.2rem; letter-spacing: 8px; }
+
+  @media (max-width: 560px) {
+    .form-row { grid-template-columns: 1fr; }
+    .card { padding: 1.25rem; }
+    .header h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">กำลังส่งข้อมูล...</div>
+</div>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="crown-line">
+      <span class="crown-icon">♛</span>
+    </div>
+    <h1>แบบทดสอบความรู้เกียวกับคอมพิวเตอร์</h1>
+    <div class="ornament">❖ ❖ ❖</div>
+    <p>ห้างทองศิริเยาวราช</p>
+    <div class="gold-divider"></div>
+  </div>
+
+  <!-- FORM: USER INFO -->
+  <div class="card" id="quiz-form">
+    <div class="card-title">
+      <div class="icon">👤</div>
+      ข้อมูลผู้เข้าสอบ
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>ชื่อ-นามสกุล *</label>
+        <input type="text" id="name" placeholder="กรอกชื่อ-นามสกุล" required>
+      </div>
+      <div class="form-group">
+        <label>สาขา *</label>
+        <select id="branch">
+          <option value="">-- เลือกสาขา --</option>
+          <option>สาขาสำนักงานใหญ่</option>
+          <option>สาขา 1</option>
+          <option>สาขา 5</option>
+          <option>สาขา 8</option>
+		  <option>สาขา 9</option>
+		  <option>สาขา 10</option>
+		  <option>สาขา 11</option>
+		  <option>สาขา 12</option>
+		  <option>สาขา 14</option>
+		  <option>สาขา 15</option>
+		  <option>สาขา 16</option>
+		  <option>สาขา 18</option>
+		  <option>สาขา 19</option>
+		  <option>สาขา 20</option>
+		  <option>สาขา 21</option>
+		  <option>สาขา 22</option>
+		  <option>สาขา ออนไลน์</option>
+          <option>อื่นๆ</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>ตำแหน่ง *</label>
+        <select id="position">
+          <option value="">-- เลือกตำแหน่ง --</option>
+          <option>พนักงานขาย</option>
+          <option>แคชเชียร์</option>
+          <option>ผู้จัดการสาขา</option>
+          <option>รองผู้จัดการสาขา</option>
+          <option>ช่างพระ</option>
+		  <option>กราฟฟิค</option>
+		  <option>จัดซื้อ</option>
+		  <option>QC</option>
+		  <option>บัญชี</option>
+          <option>อื่นๆ</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>วันที่สอบ</label>
+        <input type="date" id="exam-date">
+      </div>
+    </div>
+
+    <div class="gold-divider"></div>
+
+    <!-- PROGRESS -->
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:0.8rem; font-weight:600; color:var(--text-mid); text-transform:uppercase; letter-spacing:1px;">ความคืบหน้า</span>
+        <span class="progress-text" id="progress-text">0 / 10 ข้อ</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+    </div>
+
+    <!-- QUIZ SECTION 1 -->
+    <div class="quiz-section-label">
+      <span></span> 💻 การใช้งานคอมพิวเตอร์ <span></span>
+    </div>
+
+    <div id="quiz-container"></div>
+
+    <!-- SUBMIT -->
+    <div class="submit-wrap">
+      <button class="btn-submit" id="submit-btn" onclick="submitQuiz()" disabled>
+        ✦ ส่งคำตอบ ✦
+      </button>
+      <div style="margin-top: 12px; font-size: 0.8rem; color: var(--text-mid);">
+        กรุณาตอบให้ครบทุกข้อและกรอกข้อมูลให้ครบก่อนส่ง
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT SECTION -->
+  <div id="result-section">
+    <div class="result-card">
+      <div class="ornament">♛</div>
+      <div style="font-size: 1.4rem; font-family: 'Playfair Display'; color: var(--gold-light); margin: 0.5rem 0;">ผลการสอบ</div>
+      <div class="result-name" id="result-name"></div>
+      <div class="result-score" id="result-score">0 <span>/ 10</span></div>
+      <div class="result-status" id="result-status"></div>
+      <div style="height: 1px; background: rgba(212,160,23,0.3); margin: 1rem 0;"></div>
+      <div id="result-detail" style="font-size: 0.9rem; opacity: 0.8; line-height: 1.8;"></div>
+      <div style="margin-top: 1.5rem; font-size: 0.85rem; opacity: 0.6;">✓ ส่งข้อมูลไปยัง Google Sheet เรียบร้อยแล้ว</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwF2yRlVtHkWwnsew6B5Wc82ogCLaSGCb-OTD0RfKIT0FS_MALQ1QLImiwky65Qa28YNQ/exec";
+
+// ==========================
+// QUESTION DATA
+// ==========================
+const QUESTIONS = [
+
+{
+id:"q1",
+topic:"การปิดคอมพิวเตอร์",
+question:"หากต้องการปิดคอมพิวเตอร์อย่างปลอดภัยและลดความเสี่ยงข้อมูลเสียหาย ควรเลือกวิธีใดมากที่สุด?",
+options:[
+"กดปุ่ม Power ที่ตัวเครื่องเมื่อระบบไม่ตอบสนอง",
+"คลิก Start Menu → Power → Shut down",
+"Restart เครื่องก่อนปิดทุกครั้ง",
+"ปิดเฉพาะจอมอนิเตอร์เมื่อหยุดใช้งานระยะสั้น"
+],
+answer:"คลิก Start Menu → Power → Shut down"
+},
+
+{
+id:"q2",
+topic:"การปิดคอมพิวเตอร์",
+question:"ก่อนปิดคอมพิวเตอร์ วิธีใดเหมาะสมที่สุดในการป้องกันข้อมูลสูญหาย?",
+options:[
+"บันทึกงานและปิดโปรแกรมที่ใช้งานอยู่",
+"รีสตาร์ทเครื่องก่อนทุกครั้ง",
+"ปล่อยโปรแกรมเปิดค้างไว้เพื่อใช้งานต่อวันถัดไป",
+"ถอดอุปกรณ์ USB ออกทั้งหมดก่อน"
+],
+answer:"บันทึกงานและปิดโปรแกรมที่ใช้งานอยู่"
+},
+
+{
+id:"q3",
+topic:"อินเทอร์เน็ตขัดข้อง",
+question:"เมื่ออินเทอร์เน็ตสาขาใช้งานไม่ได้ วิธีใดเหมาะสมที่สุดในการทำให้การทำงานดำเนินต่อได้?",
+options:[
+"แจ้งผู้ให้บริการอินเทอร์เน็ตเพื่อตรวจสอบปัญหา",
+"ใช้ Hotspot จากมือถือเพื่อให้ระบบกลับมาออนไลน์ชั่วคราว",
+"รีสตาร์ท Router และอุปกรณ์เครือข่าย",
+"แจ้งหัวหน้างานและรอการแก้ไข"
+],
+answer:"ใช้ Hotspot จากมือถือเพื่อให้ระบบกลับมาออนไลน์ชั่วคราว"
+},
+
+{
+id:"q4",
+topic:"การใช้งาน Mobile Hotspot",
+question:"หากต้องการแชร์อินเทอร์เน็ตจากมือถือให้คอมพิวเตอร์ วิธีใดเหมาะสมที่สุด?",
+options:[
+"เปิด Bluetooth เพื่อส่งอินเทอร์เน็ต",
+"เชื่อมต่อ Wi-Fi สาธารณะแทน",
+"เปิด Mobile Hotspot จากเมนูการเชื่อมต่อของมือถือ",
+"เสียบสายชาร์จมือถือเข้าคอมพิวเตอร์แล้วรอ"
+],
+answer:"เปิด Mobile Hotspot จากเมนูการเชื่อมต่อของมือถือ"
+},
+
+{
+id:"q5",
+topic:"คอมพิวเตอร์ค้าง",
+question:"เมื่อคอมพิวเตอร์เริ่มค้างและไม่ตอบสนอง วิธีใดเหมาะสมที่สุดในการแก้ปัญหาเบื้องต้น?",
+options:[
+"รอสักครู่เพื่อดูว่าระบบกลับมาทำงานหรือไม่",
+"กด Ctrl + Alt + Delete เพื่อเปิด Task Manager",
+"รีสตาร์ทเครื่องทันที",
+"แจ้งฝ่าย IT โดยยังไม่ลองแก้ไขเบื้องต้น"
+],
+answer:"กด Ctrl + Alt + Delete เพื่อเปิด Task Manager"
+},
+
+{
+id:"q6",
+topic:"คอมพิวเตอร์ค้าง",
+question:"หากคอมพิวเตอร์ไม่ตอบสนองแม้กด Ctrl + Alt + Delete แล้ว วิธีใดเหมาะสมที่สุด?",
+options:[
+"กดปุ่ม Power ค้างประมาณ 5 วินาทีเพื่อบังคับปิดเครื่อง",
+"ปล่อยเครื่องไว้สักระยะเผื่อระบบกลับมาทำงาน",
+"ดึงปลั๊กไฟออกทันที",
+"แจ้งฝ่าย IT ให้เข้ามาตรวจสอบ"
+],
+answer:"กดปุ่ม Power ค้างประมาณ 5 วินาทีเพื่อบังคับปิดเครื่อง"
+},
+
+{
+id:"q7",
+topic:"เครื่องสแกนบาร์โค้ด",
+question:"เมื่อเครื่องสแกนบาร์โค้ดไม่ทำงาน วิธีใดควรทำเป็นอันดับแรกมากที่สุด?",
+options:[
+"ลองรีสตาร์ทโปรแกรมที่ใช้งาน",
+"ถอดสาย USB แล้วเสียบใหม่ หรือเปลี่ยนช่อง USB",
+"แจ้งเปลี่ยนอุปกรณ์ใหม่ทันที",
+"รีสตาร์ทคอมพิวเตอร์ทั้งเครื่อง"
+],
+answer:"ถอดสาย USB แล้วเสียบใหม่ หรือเปลี่ยนช่อง USB"
+},
+
+{
+id:"q8",
+topic:"เครื่องสแกนบาร์โค้ด",
+question:"หลังจากเสียบสาย USB ใหม่แล้วเครื่องสแกนยังไม่ทำงาน วิธีใดเหมาะสมที่สุด?",
+options:[
+"ลองเปลี่ยนช่อง USB บนคอมพิวเตอร์",
+"ตรวจสอบว่าระบบเปิดโปรแกรมสแกนอยู่หรือไม่",
+"แจ้งฝ่าย IT เพื่อขอคำแนะนำเพิ่มเติม",
+"รีสตาร์ทเครื่องคอมพิวเตอร์"
+],
+answer:"ลองเปลี่ยนช่อง USB บนคอมพิวเตอร์"
+},
+
+{
+id:"q9",
+topic:"สายแลน",
+question:"หากต้องการถอดสาย LAN ออกจากคอมพิวเตอร์ วิธีใดเหมาะสมและปลอดภัยที่สุด?",
+options:[
+"ดึงสายออกตรง ๆ อย่างระมัดระวัง",
+"กดตัวล็อกที่หัวสายก่อนดึงออก",
+"ปิดคอมพิวเตอร์ก่อนทุกครั้งแล้วค่อยถอดสาย",
+"ให้ฝ่าย IT เป็นผู้ถอดสายให้"
+],
+answer:"กดตัวล็อกที่หัวสายก่อนดึงออก"
+},
+
+{
+id:"q10",
+topic:"Windows Update",
+question:"เมื่อต้องการปิดคอมพิวเตอร์และมี Windows Update กำลังรออยู่ วิธีใดเหมาะสมที่สุด?",
+options:[
+"เลือก Update and Shut down เพื่อให้ระบบอัปเดตและปิดเครื่องอัตโนมัติ",
+"เลื่อนการอัปเดตไปวันถัดไป",
+"รีสตาร์ทเครื่องก่อนแล้วค่อยปิด",
+"ปิดเฉพาะจอมอนิเตอร์แล้วปล่อยเครื่องไว้"
+],
+answer:"เลือก Update and Shut down เพื่อให้ระบบอัปเดตและปิดเครื่องอัตโนมัติ"
+}
+
+];
+
+// ==========================
+// SHUFFLE
+// ==========================
+function shuffleArray(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+const randomizedQuestions = shuffleArray([...QUESTIONS]);
+
+let answered = {};
+
+// ==========================
+// RANDOMIZE QUESTIONS
+// ==========================
+function renderQuiz() {
+
+  const container = document.getElementById('quiz-container');
+
+  randomizedQuestions.forEach((q, index) => {
+
+    const shuffledOptions = shuffleArray([...q.options]);
+
+    const html = `
+      <div class="question-card" id="qcard-${q.id}">
+        <div class="question-header">
+          <div class="question-number">${index + 1}</div>
+
+          <div>
+            <div class="question-topic">${q.topic}</div>
+            <div class="question-text">${q.question}</div>
+          </div>
+        </div>
+
+        <div class="options-list">
+
+          ${shuffledOptions.map(option => `
+            <label class="option-label">
+              <input
+                type="radio"
+                name="${q.id}"
+                value="${option}"
+              >
+              ${option}
+            </label>
+          `).join('')}
+
+        </div>
+      </div>
+    `;
+
+    container.innerHTML += html;
+  });
+
+  attachEvents();
+}
+
+renderQuiz();
+
+
+// ==========================
+// EVENTS
+// ==========================
+function attachEvents() {
+
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+
+    radio.addEventListener('change', function() {
+
+      answered[this.name] = this.value;
+
+      const parent = this.closest('.options-list');
+
+      parent.querySelectorAll('.option-label')
+        .forEach(el => el.classList.remove('selected'));
+
+      this.closest('.option-label')
+        .classList.add('selected');
+
+      document.getElementById(
+        'qcard-' + this.name
+      ).classList.add('answered');
+
+      updateProgress();
+    });
+
+  });
+
+}
+
+// ==========================
+// PROGRESS
+// ==========================
+function updateProgress() {
+
+  const count = Object.keys(answered).length;
+
+  document.getElementById('progress-text')
+    .textContent = `${count} / ${QUESTIONS.length} ข้อ`;
+
+  document.getElementById('progress-bar')
+    .style.width =
+      `${(count / QUESTIONS.length) * 100}%`;
+
+  const name =
+    document.getElementById('name').value.trim();
+
+  const branch =
+    document.getElementById('branch').value;
+
+  const position =
+    document.getElementById('position').value;
+
+  document.getElementById('submit-btn').disabled =
+    !(count === QUESTIONS.length &&
+      name &&
+      branch &&
+      position);
+}
+
+// ==========================
+// FORM EVENTS
+// ==========================
+['name','branch','position'].forEach(id => {
+
+  document.getElementById(id)
+    .addEventListener('input', updateProgress);
+
+  document.getElementById(id)
+    .addEventListener('change', updateProgress);
+
+});
+
+// ==========================
+// SUBMIT
+// ==========================
+async function submitQuiz() {
+
+  let score = 0;
+
+  let answerReviewHTML = `
+    <div style="margin-top:20px;text-align:left;">
+      <h3 style="color:#F5D98A;margin-bottom:15px;">
+        📘 เฉลยข้อสอบ
+      </h3>
+  `;
+
+  randomizedQuestions.forEach((q, index) => {
+
+    const userAnswer = answered[q.id];
+    const isCorrect = userAnswer === q.answer;
+
+    if(isCorrect){
+      score++;
+    }
+
+    answerReviewHTML += `
+      <div style="
+        background:rgba(255,255,255,0.05);
+        padding:12px;
+        border-radius:10px;
+        margin-bottom:12px;
+        border:1px solid rgba(212,160,23,0.2);
+      ">
+
+        <div style="
+          font-weight:700;
+          color:#F5D98A;
+          margin-bottom:8px;
+        ">
+          ข้อ ${index + 1}
+        </div>
+
+        <div style="margin-bottom:8px;">
+          ${q.question}
+        </div>
+
+        <div style="
+          color:${isCorrect ? '#7CFC00' : '#FFB347'};
+          margin-bottom:4px;
+        ">
+          คำตอบของคุณ:
+          ${userAnswer}
+        </div>
+
+        <div style="color:#7CFC00;">
+          คำตอบที่ถูกต้องที่สุด:
+          ${q.answer}
+        </div>
+
+      </div>
+    `;
+  });
+
+  answerReviewHTML += `</div>`;
+
+  const payload = {
+    timestamp: new Date().toLocaleString('th-TH'),
+    name: document.getElementById('name').value,
+    branch: document.getElementById('branch').value,
+    position: document.getElementById('position').value,
+    score,
+    total: QUESTIONS.length,
+    answers: answered
+  };
+
+  document.getElementById('loading')
+    .classList.add('active');
+
+  try {
+
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+  } catch(e){
+    console.log(e);
+  }
+
+  document.getElementById('loading')
+    .classList.remove('active');
+
+  // RESULT
+  document.getElementById('quiz-form')
+    .style.display = 'none';
+
+  document.getElementById('result-section')
+    .style.display = 'block';
+
+  document.getElementById('result-name')
+    .textContent =
+      payload.name + ' | ' +
+      payload.branch + ' | ' +
+      payload.position;
+
+  document.getElementById('result-score')
+    .innerHTML =
+      `${score} <span>/ ${QUESTIONS.length}</span>`;
+
+  const statusEl =
+    document.getElementById('result-status');
+
+  if(score >= 7){
+    statusEl.textContent = '🏆 ผ่านการทดสอบ';
+    statusEl.className = 'result-status pass';
+  } else {
+    statusEl.textContent =
+      '⚠️ ยังไม่ผ่านการทดสอบ';
+    statusEl.className = 'result-status fail';
+  }
+
+  document.getElementById('result-detail')
+    .innerHTML = answerReviewHTML;
+
+}
+</script>
+</body>
+</html>
